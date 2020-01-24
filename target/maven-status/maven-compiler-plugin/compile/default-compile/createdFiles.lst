@@ -1,4 +1,3 @@
-com/esb/main/IgniteProperties$CommunicationSpi.class
-com/esb/main/IgniteProperties.class
 META-INF/spring-configuration-metadata.json
-com/esb/main/IgniteSpringBootStarterConfiguration.class
+com/esb/IgniteStarter/IgniteSpringBootStarterConfiguration.class
+com/esb/IgniteStarter/IgniteProperties.class

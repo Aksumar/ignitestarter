@@ -5,36 +5,39 @@ import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import java.util.Arrays;
 
 @Configuration
-@EnableConfigurationProperties(IgniteProperties.class)
+@EnableConfigurationProperties({IgniteProperties.class})
 public class IgniteSpringBootStarterConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(IgniteSpringBootStarterConfiguration.class);
 
     @Bean
-    public IgniteConfiguration igniteConfiguration(IgniteProperties serverProperties) {
-        final IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
-        igniteConfiguration.setClientMode(serverProperties.getIgniteCnfgClientMode());
+    public Ignite ignite(IgniteProperties clientProperties) {
+        logger.info("Start creating Ignite bean");
 
-        final TcpCommunicationSpi communicationSpi = new TcpCommunicationSpi();
-        communicationSpi.setLocalAddress(serverProperties.getCommunicationSpi().getLocalAddress());
-        communicationSpi.setLocalPort(serverProperties.getCommunicationSpi().getLocalPort());
-        communicationSpi.setLocalPortRange(serverProperties.getCommunicationSpi().getPortRange());
+        IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
+        igniteConfiguration.setClientMode(clientProperties.isClient());
 
-        final TcpDiscoverySpi discoverySpi = new TcpDiscoverySpi();
+        //указываем, на каком хост-порт будет установлена сама нода
+        TcpDiscoverySpi discoverySpi = new TcpDiscoverySpi();
+        discoverySpi.setLocalAddress(clientProperties.getLocalAddress());
+        discoverySpi.setLocalPort(clientProperties.getLocalPort());
+        discoverySpi.setLocalPortRange(clientProperties.getPortRange());
+
+        //указываем к какому набору хост-порт хотим подключиться
+        TcpCommunicationSpi communicationSpi = new TcpCommunicationSpi();
+        TcpDiscoveryVmIpFinder ipFinder=new TcpDiscoveryVmIpFinder();
+        ipFinder.setAddresses(Arrays.asList(clientProperties.getIpFinderAddress()));
+        discoverySpi.setIpFinder(ipFinder);
+
         igniteConfiguration.setDiscoverySpi(discoverySpi);
-
-        return igniteConfiguration;
-    }
-
-    @Bean
-    public Ignite ignite(IgniteConfiguration igniteConfiguration)
-    {
-        Ignite ignite = Ignition.start(igniteConfiguration);
-        return ignite;
+        return  Ignition.start(igniteConfiguration);
     }
 }
-
-

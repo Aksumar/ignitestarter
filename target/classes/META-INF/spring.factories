@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.esb.main.IgniteSpringBootStarterConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.esb.IgniteStarter.IgniteSpringBootStarterConfiguration
