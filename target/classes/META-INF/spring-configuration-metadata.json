@@ -1,0 +1,60 @@
+{
+  "groups": [
+    {
+      "name": "server",
+      "type": "com.esb.main.IgniteProperties",
+      "sourceType": "com.esb.main.IgniteProperties"
+    },
+    {
+      "name": "server.communication-spi",
+      "type": "com.esb.main.IgniteProperties$CommunicationSpi",
+      "sourceType": "com.esb.main.IgniteProperties",
+      "sourceMethod": "getCommunicationSpi()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "server.cache-mode",
+      "type": "org.apache.ignite.cache.CacheMode",
+      "sourceType": "com.esb.main.IgniteProperties"
+    },
+    {
+      "name": "server.cache-name",
+      "type": "java.lang.String",
+      "sourceType": "com.esb.main.IgniteProperties"
+    },
+    {
+      "name": "server.communication-spi.local-address",
+      "type": "java.lang.String",
+      "sourceType": "com.esb.main.IgniteProperties$CommunicationSpi"
+    },
+    {
+      "name": "server.communication-spi.local-port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.esb.main.IgniteProperties$CommunicationSpi",
+      "defaultValue": 0
+    },
+    {
+      "name": "server.communication-spi.port-range",
+      "type": "java.lang.Integer",
+      "sourceType": "com.esb.main.IgniteProperties$CommunicationSpi",
+      "defaultValue": 0
+    },
+    {
+      "name": "server.ignite-cnfg-client-mode",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.esb.main.IgniteProperties"
+    },
+    {
+      "name": "server.ip-finder-address",
+      "type": "java.lang.String",
+      "sourceType": "com.esb.main.IgniteProperties"
+    },
+    {
+      "name": "server.segmentation-policy",
+      "type": "org.apache.ignite.plugin.segmentation.SegmentationPolicy",
+      "sourceType": "com.esb.main.IgniteProperties"
+    }
+  ],
+  "hints": []
+}
