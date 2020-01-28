@@ -6,21 +6,16 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.util.Arrays;
 
 @Configuration
 @EnableConfigurationProperties({IgniteProperties.class})
 public class IgniteSpringBootStarterConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(IgniteSpringBootStarterConfiguration.class);
 
     @Bean
     public Ignite ignite(IgniteProperties clientProperties) {
-        logger.info("Start creating Ignite bean");
 
         IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
         igniteConfiguration.setClientMode(clientProperties.isClient());
@@ -31,13 +26,18 @@ public class IgniteSpringBootStarterConfiguration {
         discoverySpi.setLocalPort(clientProperties.getLocalPort());
         discoverySpi.setLocalPortRange(clientProperties.getPortRange());
 
-        //указываем к какому набору хост-порт хотим подключиться
+        //1024 раньше было по дефолту
         TcpCommunicationSpi communicationSpi = new TcpCommunicationSpi();
+        communicationSpi.setMessageQueueLimit(1024);
+
+        //указываем к какому набору хост-порт хотим подключиться
         TcpDiscoveryVmIpFinder ipFinder=new TcpDiscoveryVmIpFinder();
-        ipFinder.setAddresses(Arrays.asList(clientProperties.getIpFinderAddress()));
+        ipFinder.setAddresses(clientProperties.getIpFinderAddress());
         discoverySpi.setIpFinder(ipFinder);
 
+
         igniteConfiguration.setDiscoverySpi(discoverySpi);
+        igniteConfiguration.setCommunicationSpi(communicationSpi);
         return  Ignition.start(igniteConfiguration);
     }
 }

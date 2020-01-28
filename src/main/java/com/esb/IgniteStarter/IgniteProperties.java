@@ -1,23 +1,22 @@
 package com.esb.IgniteStarter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 @ConfigurationProperties(prefix = "server")
 public class IgniteProperties {
-    private static final Logger logger = LoggerFactory.getLogger(IgniteProperties.class);
-    private String ipFinderAddress;
+    private List<String> ipFinderAddress;
     private String localAddress;
     private int localPort;
     private int portRange;
     private boolean client;
 
-    public String getIpFinderAddress() {
+    public List<String> getIpFinderAddress() {
         return ipFinderAddress;
     }
 
-    public void setIpFinderAddress(String ipFinderAddress) {
+    public void setIpFinderAddress(List<String> ipFinderAddress) {
         this.ipFinderAddress = ipFinderAddress;
     }
 
