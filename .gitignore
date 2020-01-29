@@ -1,0 +1,3 @@
+/target/
+/src/test/resources/application.yml
+/src/main/java/com/esb/IgniteStarter/ServerMain.java

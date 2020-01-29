@@ -1,8 +1,11 @@
 package com.esb.IgniteStarter;
 
 import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteLogger;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.logger.slf4j.Slf4jLogger;
+import org.apache.ignite.plugin.segmentation.SegmentationPolicy;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
@@ -35,7 +38,11 @@ public class IgniteSpringBootStarterConfiguration {
         ipFinder.setAddresses(clientProperties.getIpFinderAddress());
         discoverySpi.setIpFinder(ipFinder);
 
+        IgniteLogger log = new Slf4jLogger();
 
+        igniteConfiguration.setGridLogger(log);
+
+        igniteConfiguration.setSegmentationPolicy(SegmentationPolicy.NOOP);
         igniteConfiguration.setDiscoverySpi(discoverySpi);
         igniteConfiguration.setCommunicationSpi(communicationSpi);
         return  Ignition.start(igniteConfiguration);
