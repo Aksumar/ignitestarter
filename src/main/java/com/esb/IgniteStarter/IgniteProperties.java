@@ -8,7 +8,8 @@ import java.util.List;
 public class IgniteProperties {
     private List<String> ipFinderAddress;
     private String localAddress;
-    private int localPort;
+    private int discoveryPort;
+    private int communicationPort;
     private int portRange;
     private boolean client;
 
@@ -28,12 +29,20 @@ public class IgniteProperties {
         this.localAddress = localAddress;
     }
 
-    public int getLocalPort() {
-        return localPort;
+    public int getDiscoveryPort() {
+        return discoveryPort;
     }
 
-    public void setLocalPort(int localPort) {
-        this.localPort = localPort;
+    public void setDiscoveryPort(int discoveryPort) {
+        this.discoveryPort = discoveryPort;
+    }
+
+    public int getCommunicationPort() {
+        return communicationPort;
+    }
+
+    public void setCommunicationPort(int communicationPort) {
+        this.communicationPort = communicationPort;
     }
 
     public int getPortRange() {

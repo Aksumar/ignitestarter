@@ -10,10 +10,11 @@
 
     <properties>
         <h2.version>1.4.197</h2.version>
-        <gridgain.version>8.7.
-        </gridgain.version>
+        <gridgain.version>8.7.</gridgain.version>
         <spring.version>2.2.2.RELEASE</spring.version>
         <maven.compiler.release>13</maven.compiler.release>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
     </properties>
 
     <dependencies>
