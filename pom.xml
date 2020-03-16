@@ -10,7 +10,7 @@
 
     <properties>
         <h2.version>1.4.197</h2.version>
-        <gridgain.version>8.7.</gridgain.version>
+        <gridgain.version>8.7.10</gridgain.version>
         <spring.version>2.2.2.RELEASE</spring.version>
         <maven.compiler.release>13</maven.compiler.release>
         <maven.compiler.source>13</maven.compiler.source>
@@ -27,19 +27,26 @@
         <dependency>
             <groupId>org.gridgain</groupId>
             <artifactId>ignite-core</artifactId>
-            <version>8.7.10</version>
+            <version>${gridgain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.gridgain</groupId>
             <artifactId>ignite-indexing</artifactId>
-            <version>8.7.10</version>
+            <version>${gridgain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.gridgain</groupId>
+            <artifactId>ignite-slf4j</artifactId>
+            <version>${gridgain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.ignite</groupId>
-            <artifactId>ignite-slf4j</artifactId>
+            <artifactId>ignite-zookeeper</artifactId>
             <version>2.7.6</version>
         </dependency>
+
     </dependencies>
 </project>
