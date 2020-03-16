@@ -2,6 +2,7 @@ package com.esb.IgniteStarter;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteLogger;
+import org.apache.ignite.IgniteServices;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.events.*;
@@ -13,9 +14,6 @@ import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.sql.SQLTransactionRollbackException;
-import java.util.*;
 
 @Configuration
 @EnableConfigurationProperties({IgniteProperties.class})
@@ -61,7 +59,6 @@ public class IgniteSpringBootStarterConfiguration {
 
         igniteConfiguration.setGridLogger(log);
 
-
         igniteConfiguration.setCommunicationSpi(communicationSpi);
 
         if (igniteProperties.isZookeeper())
@@ -73,13 +70,17 @@ public class IgniteSpringBootStarterConfiguration {
 
         Ignite ignite = Ignition.start(igniteConfiguration);
 
-        PartitionLossHandler partitionLossHandler = new PartitionLossHandler();
+        IgniteServices svcs = ignite.services();
+
+        svcs.deployClusterSingleton("ClusterSingletonPartitionLossService", new PartitionLossServiceImpl());
+
+
+        PartitionLossService svc = ignite.services().serviceProxy("ClusterSingletonPartitionLossService",
+                PartitionLossService.class, false);
 
         IgnitePredicate<CacheRebalancingEvent> locLsnrDataLost = evt -> {
 
-            partitionLossHandler.addPartition(evt.cacheName(), evt.partition());
-            partitionLossHandler.toStr();
-
+            svc.addPartition(evt.cacheName(), evt.partition());
 
             return true; // Continue listening.
         };
