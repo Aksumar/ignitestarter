@@ -1,9 +1,6 @@
 package com.esb.IgniteStarter;
 
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteLogger;
-import org.apache.ignite.IgniteServices;
-import org.apache.ignite.Ignition;
+import org.apache.ignite.*;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.events.*;
 import org.apache.ignite.lang.IgnitePredicate;
@@ -14,6 +11,8 @@ import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Configuration
 @EnableConfigurationProperties({IgniteProperties.class})
@@ -74,7 +73,6 @@ public class IgniteSpringBootStarterConfiguration {
 
         svcs.deployClusterSingleton("ClusterSingletonPartitionLossService", new PartitionLossServiceImpl());
 
-
         PartitionLossService svc = ignite.services().serviceProxy("ClusterSingletonPartitionLossService",
                 PartitionLossService.class, false);
 
@@ -84,7 +82,6 @@ public class IgniteSpringBootStarterConfiguration {
 
             return true; // Continue listening.
         };
-
 
         ignite.events().localListen(locLsnrDataLost,
                 EventType.EVT_CACHE_REBALANCE_PART_DATA_LOST);
