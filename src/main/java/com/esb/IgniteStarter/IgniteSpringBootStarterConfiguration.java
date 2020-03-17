@@ -73,12 +73,21 @@ public class IgniteSpringBootStarterConfiguration {
 
         svcs.deployClusterSingleton("ClusterSingletonPartitionLossService", new PartitionLossServiceImpl());
 
-        PartitionLossService svc = ignite.services().serviceProxy("ClusterSingletonPartitionLossService",
-                PartitionLossService.class, false);
 
         IgnitePredicate<CacheRebalancingEvent> locLsnrDataLost = evt -> {
+            PartitionLossService svc = null;
 
-            svc.addPartition(evt.cacheName(), evt.partition());
+            try {
+                svc = ignite.services().serviceProxy("ClusterSingletonPartitionLossService",
+                        PartitionLossService.class, false);
+            } catch (Exception ex) {
+                System.out.println(ex.toString());
+            }
+
+            if (svc == null) {
+                System.out.println("БЛЯТЬ ПИЗДЕЦ ");
+            } else
+                svc.addPartition(evt.cacheName(), evt.partition());
 
             return true; // Continue listening.
         };

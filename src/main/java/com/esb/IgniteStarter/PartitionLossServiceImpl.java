@@ -1,5 +1,7 @@
 package com.esb.IgniteStarter;
 
+import org.apache.ignite.Ignite;
+import org.apache.ignite.resources.IgniteInstanceResource;
 import org.apache.ignite.services.Service;
 import org.apache.ignite.services.ServiceContext;
 
@@ -11,6 +13,10 @@ import java.util.concurrent.ConcurrentMap;
 public class PartitionLossServiceImpl implements Service, PartitionLossService {
 
     private ConcurrentMap<String, LinkedList<Integer>> lostPartitions;
+
+    @IgniteInstanceResource
+    private Ignite ignite;
+
     /** Service name. */
     private String svcName;
 
@@ -36,9 +42,6 @@ public class PartitionLossServiceImpl implements Service, PartitionLossService {
     @Override
     public void execute(ServiceContext ctx) throws Exception {
         UUID x = ctx.executionId();
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + x.toString() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
 
         System.out.println("Executing distributed service: " + svcName);
     }
