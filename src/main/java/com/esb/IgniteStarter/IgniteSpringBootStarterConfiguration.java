@@ -60,6 +60,7 @@ public class IgniteSpringBootStarterConfiguration {
 
         igniteConfiguration.setCommunicationSpi(communicationSpi);
 
+        igniteConfiguration.setLifecycleBeans(new LifeCycleBeanImpl());
         if (igniteProperties.isZookeeper())
             igniteConfiguration.setDiscoverySpi(zkDiscoSpi);
         else
@@ -68,33 +69,6 @@ public class IgniteSpringBootStarterConfiguration {
         igniteConfiguration.setIncludeEventTypes(EventType.EVT_CACHE_REBALANCE_PART_DATA_LOST);
 
         Ignite ignite = Ignition.start(igniteConfiguration);
-
-        IgniteServices svcs = ignite.services();
-
-        svcs.deployClusterSingleton("ClusterSingletonPartitionLossService", new PartitionLossServiceImpl());
-
-
-        IgnitePredicate<CacheRebalancingEvent> locLsnrDataLost = evt -> {
-            PartitionLossService svc = null;
-
-            try {
-                svc = ignite.services().serviceProxy("ClusterSingletonPartitionLossService",
-                        PartitionLossService.class, false);
-            } catch (Exception ex) {
-                System.out.println(ex.toString());
-            }
-
-            if (svc == null) {
-                System.out.println("БЛЯТЬ ПИЗДЕЦ ");
-            } else
-                svc.addPartition(evt.cacheName(), evt.partition());
-
-            return true; // Continue listening.
-        };
-
-        ignite.events().localListen(locLsnrDataLost,
-                EventType.EVT_CACHE_REBALANCE_PART_DATA_LOST);
-
 
         return ignite;
     }
