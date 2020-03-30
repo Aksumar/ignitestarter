@@ -66,8 +66,6 @@ public class IgniteSpringBootStarterConfiguration {
         else
             igniteConfiguration.setDiscoverySpi(discoverySpi);
 
-        igniteConfiguration.setIncludeEventTypes(EventType.EVT_CACHE_REBALANCE_PART_DATA_LOST);
-
         Ignite ignite = Ignition.start(igniteConfiguration);
 
         return ignite;
