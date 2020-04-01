@@ -3,15 +3,17 @@ package com.esb.IgniteStarter;
 import org.apache.ignite.*;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.events.*;
+import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.ignite.lang.IgnitePredicate;
-import org.apache.ignite.logger.slf4j.Slf4jLogger;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
+import org.apache.ignite.spi.discovery.zk.ZookeeperDiscoverySpi;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Configuration
@@ -43,7 +45,7 @@ public class IgniteSpringBootStarterConfiguration {
         discoverySpi.setIpFinder(ipFinder);
 
         //Если активирован zookeeper:
-        ZookeeperDiscoverySpiImpl zkDiscoSpi = new ZookeeperDiscoverySpiImpl();
+        ZookeeperDiscoverySpi zkDiscoSpi = new ZookeeperDiscoverySpi();
         zkDiscoSpi.clientReconnectSupported();
 
         zkDiscoSpi.setZkConnectionString(
@@ -54,9 +56,6 @@ public class IgniteSpringBootStarterConfiguration {
         zkDiscoSpi.setZkRootPath("/IgniteTestZK");
         zkDiscoSpi.setJoinTimeout(igniteProperties.getJoinTimeout());
 
-        IgniteLogger log = new Slf4jLogger();
-
-        igniteConfiguration.setGridLogger(log);
 
         igniteConfiguration.setCommunicationSpi(communicationSpi);
 
@@ -66,7 +65,15 @@ public class IgniteSpringBootStarterConfiguration {
         else
             igniteConfiguration.setDiscoverySpi(discoverySpi);
 
+
+        igniteConfiguration.setIncludeEventTypes(EventType.EVT_NODE_LEFT,
+                EventType.EVT_NODE_FAILED, EventType.EVT_CACHE_OBJECT_PUT);
+
         Ignite ignite = Ignition.start(igniteConfiguration);
+
+
+
+
 
         return ignite;
     }

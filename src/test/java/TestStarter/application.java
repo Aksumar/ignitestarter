@@ -41,9 +41,6 @@ public class application implements CommandLineRunner {
 
         IgniteCache<Integer, String> igniteCache1 = ignite.getOrCreateCache(cfgCache1);
 
-//        IgniteCache<Integer, String> igniteCache = ignite.getOrCreateCache("Cache1");
-//        IgniteCache<Integer, String> igniteCache1 = ignite.getOrCreateCache("Cache2");
-
 
         for (int i = 0; i < 20; ++i) {
             igniteCache.putIfAbsent(i, " ----- " + i + " -----");
